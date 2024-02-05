@@ -1,0 +1,7 @@
+path should be tools/coilcam iirc?
+
+
+How .txt file works:
+inports, outputs, initial state?
+
+tools/machines/shopbot!!!!!
