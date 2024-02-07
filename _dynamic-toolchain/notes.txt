@@ -5,3 +5,6 @@ How .txt file works:
 inports, outputs, initial state?
 
 tools/machines/shopbot!!!!!
+
+
+Rhino libraries will NOT WORK IN PYTHON
