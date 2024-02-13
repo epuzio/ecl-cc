@@ -14,76 +14,54 @@ import math
 from planager.Tool import Tool
 import json
 import os.path
-import OpenGL as gl
+import numpy as np
 
 class CC_ToolpathUnitGenerator(Tool, config=CONFIG):
     def state_updated(self, key):
         if key == "paths":
             self.outports["paths"] = self.state["paths"]
             
-    def inports_updated(self, inportID): #from Array2D
-        port_handlers = {
-            "position": self.set_position
-            "initialRadius": self.set_initial_radius
-            "layerHeight": self.set_layer_height
-            "nbLayers": self.set_nb_layers
-            "nbPointsInLayer": self.set_nb_points_in_layer
-            "radiusShapingParameter": self.set_radius_shaping
-            "scalingRadiusShapingParameter": self.set_scale_rotate_translate_scaleradius
-            "scaleShapingParameter": self.set_scale_rotate_translate_scaleradius
-            "translateShapingParameter": self.set_scale_rotate_translate_scaleradius
-            "rotateShapingParameter": self.set_scale_rotate_translate_scaleradius
-        }
-        port_handlers[inportID]()
+    def inports_updated(self, inportID): #from CA, redundant??
+        if inportID == "position":
+            self.state["position"] = int(self.inports["position"])
+        if inportID == "initialRadius":
+            self.state["initialRadius"] = int(self.inports["initialRadius"])
+        if inportID == "layerHeight":
+            self.state["layerHeight"] = int(self.inports["layerHeight"])
+        if inportID == "nbLayers":
+            self.state["nbLayers"] = int(self.inports["nbLayers"])
+        if inportID == "nbPointsInLayer":
+            self.state["nbPointsInLayer"] = int(self.inports["nbPointsInLayer"])
+            
+            
+        if inportID == "radiusShapingParameter":
+            if self.inports["radiusShapingParameter"]:
+                self.state["radiusShapingParameter"] = int(self.inports["radiusShapingParameter"]) * int(self.state["nbPointsInLayer"])
+            else:
+                self.state["radiusShapingParameter"] = np.zeros(self.state["nbPointsInLayer"])
         
+        if inportID == "scaleShapingParameter":
+            if self.inports["scaleShapingParameter"]:
+                self.state["scaleShapingParameter"] = int(self.inports["scaleShapingParameter"]) * int(self.state["nbLayers"])
+            else:
+                self.state["radiusShapingParameter"] = np.zeros(self.state["nbLayers"])
         
-   
-    
-    # First 5 inputs to be set for calculations - is this redundant?
-    def set_position(self):
-        if not self.inports["position"]:
-            return
-        self.state["position"] = int(self.inports["position"])
-    
-    def set_initial_radius(self):
-        if not self.inports["initialRadius"]:
-            return
-        self.state["initialRadius"] = int(self.inports["initialRadius"])
-        
-    def set_layer_height(self):
-        if not self.inports["layerHeight"]:
-            return
-        self.state["layerHeight"] = int(self.inports["layerHeight"])
-    
-    def set_nb_layers():
-        if not self.inports["nbLayers"]:
-            return
-        self.state["nbLayers"] = int(self.inports["nbLayers"])
-
-    def set_nb_points_in_layer():
-        if not self.inports["nbPointsInLayer"]:
-            return
-        self.state["nbPointsInLayer"] = int(self.inports["nbPointsInLayer"])
-    
+        if inportID == "radiusShapingParameter":
+            if self.inports["radiusShapingParameter"]:
+                self.state["radiusShapingParameter"] = int(self.inports["radiusShapingParameter"]) * int(self.state["nbPointsInLayer"])
+            else:
+                self.state["radiusShapingParameter"] = np.zeros(self.state["nbPointsInLayer"])
         
         
         
-    ## last 5 Parameters can be set to 0
-    
-    #radius shaping parameter is dependent on nbPointsInLayer
-    def set_radius_shaping(): #check logic
-        if not self.inports["nbPointsInLayer"]: #radiusShapingParameter is empty
-            self.state["radiusShapingParameter"] = np.zeros(self.state["nbPointsInLayer"])
-            return
-        radsp = []
-        for i in range(0, self.state["nbPoints"]):
-            radsp.append(self.inports["radiusShapingParameter"][i])
-            self.state["radiusShapingParameter"] = radsp
+      
         
+        
+    ## last 5 Parameters can be set to 0 if not used
         
     #all other parameters are dependent on nbLayers 
     def set_scale_rotate_translate_scaleradius():
-        if not self.inports["nbLayers"]:
+        if not self.inports["scaleShapingParameter"]:
             self.state["scaleShapingParameter"] = np.zeros(self.state["nbLayers"])
             self.state["translateShapingParameter"] = np.zeros(self.state["nbLayers"])
             self.state["rotateShapingParameter"] = np.zeros(self.state["nbLayers"])

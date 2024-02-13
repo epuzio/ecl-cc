@@ -59,4 +59,3 @@ for j in range(0, nbLayers):
         path.append(rs.CreatePoint(position.X + (radius+srsp[j]*radsp[i]+ssp[j])*math.cos(i*angle*math.pi/180 + rsp[j]*math.pi/180) + tsp[j].X, position.Y + (radius + srsp[j]*radsp[i] + ssp[j] )*math.sin(i*angle*math.pi/180 + rsp[j]*math.pi/180) + tsp[j].Y, position.Z+layerHeight*j))
         #path.append(rs.CreatePoint(position.X + (radius+radsp[i]+ssp[j])*math.cos(i*angle*math.pi/180 + rsp[j]*math.pi/180) + tsp[j].X, position.Y + (radius + radsp[i] + ssp[j] )*math.sin(i*angle*math.pi/180 + rsp[j]*math.pi/180) + tsp[j].Y, position.Z+layerHeight*j))
 
-
